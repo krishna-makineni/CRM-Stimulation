@@ -1,0 +1,15 @@
+export type {
+  LoyaltyTier,
+  CampaignStatus,
+  Channel,
+  CommunicationStatus,
+  SegmentStatus,
+  Customer,
+  Order,
+  Segment,
+  Campaign,
+  Communication,
+  DashboardMetrics,
+  ChannelPerformance,
+  CopilotSession,
+} from '@shared/types';

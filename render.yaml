@@ -1,0 +1,30 @@
+services:
+  - type: web
+    name: xeno-crm-service
+    runtime: node
+    rootDir: crm-service
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGODB_URI
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: CHANNEL_SERVICE_URL
+        sync: false
+      - key: CRM_WEBHOOK_URL
+        sync: false
+
+  - type: web
+    name: xeno-channel-service
+    runtime: node
+    rootDir: channel-service
+    buildCommand: npm install && npm run build
+    startCommand: npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: CRM_WEBHOOK_URL
+        sync: false
