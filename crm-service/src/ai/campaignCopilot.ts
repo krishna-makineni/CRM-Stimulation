@@ -402,6 +402,10 @@ async function applyDraftUpdates(
     return fallbackMatch?.[1]?.trim();
   };
 
+  const isLikelyChangeInstruction = (value: string) =>
+    /\\b(?:tone|channel|offer|objective|name|audience|segment|copy|content)\\b/i.test(value) &&
+    value.split(/\\s+/).length <= 8;
+
   const extractMessage = (input: string) => {
     const explicitMessage = lineValue('message') ?? lineValue('copy') ?? lineValue('content');
     if (explicitMessage && !isLikelyChangeInstruction(explicitMessage)) return explicitMessage;
