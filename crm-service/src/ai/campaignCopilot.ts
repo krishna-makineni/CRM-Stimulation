@@ -227,6 +227,7 @@ export async function processCopilotMessage(
       audienceDescription: audienceDesc,
       tone: intent.tone,
       offer: intent.offer,
+      channel: channelRec.channel,
     });
     updateStep(session, 5, 'completed', { message });
 
@@ -470,6 +471,7 @@ async function applyDraftUpdates(
       audienceDescription: `${preview.customerCount} customers matching: ${preview.segmentQuery}`,
       tone: preview.tone ?? 'friendly',
       offer: preview.offer,
+      channel: preview.channel,
     });
     setField('message', regenerated, 'message');
   }
