@@ -70,15 +70,44 @@ export function CampaignDetail() {
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={250}>
-              <BarChart data={analytics.timeline}>
-                <CartesianGrid strokeDasharray="3 3" stroke="#334155" />
-                <XAxis dataKey="date" stroke="#94a3b8" />
-                <YAxis stroke="#94a3b8" />
-                <Tooltip contentStyle={{ backgroundColor: '#1e293b', border: '1px solid #334155', borderRadius: '8px' }} />
-                <Bar dataKey="sent" fill="#8b5cf6" name="Sent" />
-                <Bar dataKey="delivered" fill="#06b6d4" name="Delivered" />
-                <Bar dataKey="opened" fill="#f59e0b" name="Opened" />
-                <Bar dataKey="clicked" fill="#10b981" name="Clicked" />
+              <BarChart data={analytics.timeline} margin={{ top: 10, right: 0, left: -10, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="sentGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#a78bfa" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#a78bfa" stopOpacity={0.4} />
+                  </linearGradient>
+                  <linearGradient id="deliveredGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#38bdf8" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#38bdf8" stopOpacity={0.35} />
+                  </linearGradient>
+                  <linearGradient id="openedGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#fbbf24" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#fbbf24" stopOpacity={0.35} />
+                  </linearGradient>
+                  <linearGradient id="clickedGradient" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#34d399" stopOpacity={0.9} />
+                    <stop offset="100%" stopColor="#34d399" stopOpacity={0.35} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" stroke="#334155" vertical={false} />
+                <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fill: '#cbd5e1', fontSize: 12 }} padding={{ left: 10, right: 10 }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fill: '#cbd5e1', fontSize: 12 }} />
+                <Tooltip
+                  cursor={{ fill: 'rgba(15,23,42,0.15)' }}
+                  contentStyle={{
+                    backgroundColor: '#0f172a',
+                    border: '1px solid #334155',
+                    borderRadius: '10px',
+                    color: '#e2e8f0',
+                    boxShadow: '0 12px 30px rgba(15,23,42,0.35)',
+                  }}
+                  labelStyle={{ color: '#94a3b8', fontSize: 12 }}
+                  itemStyle={{ color: '#ffffff', fontSize: 13 }}
+                />
+                <Bar dataKey="sent" fill="url(#sentGradient)" radius={[10, 10, 0, 0]} barSize={28} name="Sent" />
+                <Bar dataKey="delivered" fill="url(#deliveredGradient)" radius={[10, 10, 0, 0]} barSize={28} name="Delivered" />
+                <Bar dataKey="opened" fill="url(#openedGradient)" radius={[10, 10, 0, 0]} barSize={28} name="Opened" />
+                <Bar dataKey="clicked" fill="url(#clickedGradient)" radius={[10, 10, 0, 0]} barSize={28} name="Clicked" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>

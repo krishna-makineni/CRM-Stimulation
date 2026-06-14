@@ -358,31 +358,6 @@ export function Dashboard() {
         </div>
       </div>
 
-      {/* AI Insights */}
-      {aiInsights && (
-        <div
-          className="rounded-2xl p-5"
-          style={{
-            background: 'linear-gradient(135deg, rgba(124,58,237,0.1), rgba(99,102,241,0.07))',
-            border: '1px solid rgba(124,58,237,0.2)',
-          }}
-        >
-          <div className="flex items-center gap-2 mb-3">
-            <div
-              className="flex h-7 w-7 items-center justify-center rounded-lg"
-              style={{ background: 'linear-gradient(135deg, #7c3aed, #6366f1)' }}
-            >
-              <Sparkles className="h-3.5 w-3.5 text-white" />
-            </div>
-            <h3 className="text-sm font-semibold text-white">Gemini AI Insights</h3>
-          </div>
-          <p className="text-sm text-white/60 leading-relaxed">
-            {typeof aiInsights === 'string' ? aiInsights : JSON.stringify(aiInsights)}
-          </p>
-        </div>
-      )}
-
-      {/* Campaign Comparison */}
       <AnalyticsCharts
         metrics={metrics}
         comparison={comparison as Record<string, unknown>[] | undefined}

@@ -14,6 +14,7 @@ router.get('/copilot/sessions/:sessionId', asyncHandler(campaignController.getCo
 router.post('/copilot/sessions/:sessionId/messages', asyncHandler(campaignController.sendCopilotMessage));
 router.get('/:id', asyncHandler(campaignController.getCampaignById));
 router.put('/:id', asyncHandler(campaignController.updateCampaign));
+router.delete('/:id', asyncHandler(campaignController.deleteCampaign));
 router.post('/:id/launch', asyncHandler(campaignController.launchCampaignHandler));
 router.post('/:id/preview', asyncHandler(campaignController.getMessagePreviewHandler));
 

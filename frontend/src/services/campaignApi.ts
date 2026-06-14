@@ -25,15 +25,18 @@ export const campaignApi = {
     channel: string;
     tone: string;
     offer: string;
-  }) => request('/campaigns', { method: 'POST', body: JSON.stringify(data) }),
+  }) => request<Campaign>('/campaigns', { method: 'POST', body: JSON.stringify(data) }),
 
   launch: (id: string) => request(`/campaigns/${id}/launch`, { method: 'POST' }),
+
+  delete: (id: string) => request<Campaign>(`/campaigns/${id}`, { method: 'DELETE' }),
 
   generateMessage: (data: {
     objective: string;
     audienceDescription: string;
     tone: string;
-    offer: string;
+    offer?: string;
+    channel: string;
   }) => request<{ message: string }>('/campaigns/generate-message', { method: 'POST', body: JSON.stringify(data) }),
 };
 

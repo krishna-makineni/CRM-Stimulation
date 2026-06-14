@@ -108,9 +108,9 @@ export function Copilot() {
         </p>
       </div>
 
-      <div className="grid gap-6 lg:grid-cols-3">
-        <div className="lg:col-span-2">
-          <Card className="h-[600px] flex flex-col border-primary/20">
+      <div className="grid gap-6 justify-center lg:grid-cols-[minmax(0,900px)_320px]">
+        <div className="lg:col-span-2 flex justify-center">
+          <Card className="h-[600px] w-full max-w-[900px] flex flex-col border-primary/20">
             <CardHeader className="border-b border-border">
               <CardTitle className="text-lg">Chat</CardTitle>
             </CardHeader>
@@ -205,38 +205,6 @@ export function Copilot() {
         </div>
 
         <div>
-          <Card>
-            <CardHeader>
-              <CardTitle className="text-lg">Workflow Progress</CardTitle>
-              <CardDescription>8-step agentic pipeline</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-3">
-              {session?.steps.map((step) => (
-                <div key={step.step} className="flex items-start gap-3">
-                  {step.status === 'completed' ? (
-                    <CheckCircle className="h-5 w-5 text-emerald-400 shrink-0 mt-0.5" />
-                  ) : step.status === 'in_progress' ? (
-                    <Loader2 className="h-5 w-5 text-primary animate-spin shrink-0 mt-0.5" />
-                  ) : (
-                    <Circle className="h-5 w-5 text-muted-foreground shrink-0 mt-0.5" />
-                  )}
-                  <div>
-                    <p className={cn('text-sm font-medium', step.status === 'pending' && 'text-muted-foreground')}>
-                      {step.step}. {step.title}
-                    </p>
-                    {step.status === 'completed' && step.result != null && (
-                      <p className="text-xs text-muted-foreground mt-0.5 truncate max-w-[200px]">
-                        {typeof step.result === 'object'
-                          ? JSON.stringify(step.result).slice(0, 80) + '...'
-                          : String(step.result)}
-                      </p>
-                    )}
-                  </div>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
-
           {session?.campaignPreview && (
             <div className="mt-4">
               <CampaignPreview preview={session.campaignPreview} />

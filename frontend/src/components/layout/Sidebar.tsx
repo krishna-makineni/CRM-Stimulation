@@ -44,7 +44,7 @@ const navItems = [
   },
 ];
 
-export function Sidebar() {
+export default function Sidebar() {
   return (
     <aside className="fixed left-0 top-0 z-40 h-screen w-64 flex flex-col"
       style={{
@@ -64,7 +64,7 @@ export function Sidebar() {
           <Zap className="h-4 w-4 text-white" />
         </div>
         <div>
-          <h1 className="text-base font-bold tracking-tight text-white">Xeno AI</h1>
+          <h1 className="text-base font-bold tracking-tight text-white">EngageX</h1>
           <p className="text-[10px] text-white/35 font-medium tracking-widest uppercase">CRM Platform</p>
         </div>
       </div>
@@ -150,6 +150,9 @@ export function Sidebar() {
           </div>
           <p className="text-[11px] text-white/40 leading-relaxed">
             CRM, Channel & AI services running
+          </p>
+          <p className="text-[10px] text-white/40 mt-2 leading-relaxed">
+            Data is refreshed every hour to keep insights current.
           </p>
         </div>
       </div>

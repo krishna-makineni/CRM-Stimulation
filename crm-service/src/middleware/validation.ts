@@ -57,6 +57,7 @@ export const generateMessageSchema = z.object({
   audienceDescription: z.string(),
   tone: z.string().default('friendly'),
   offer: z.string().optional(),
+  channel: z.enum(['WhatsApp', 'SMS', 'Email', 'RCS']).default('WhatsApp'),
 });
 
 export const recommendChannelSchema = z.object({

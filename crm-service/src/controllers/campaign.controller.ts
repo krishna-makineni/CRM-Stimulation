@@ -47,6 +47,15 @@ export async function updateCampaign(req: Request, res: Response): Promise<void>
   res.json(campaign);
 }
 
+export async function deleteCampaign(req: Request, res: Response): Promise<void> {
+  const campaign = await campaignService.deleteCampaign(req.params.id as string);
+  if (!campaign) {
+    res.status(404).json({ error: 'Campaign not found' });
+    return;
+  }
+  res.json({ message: 'Campaign deleted', campaign });
+}
+
 export async function launchCampaignHandler(req: Request, res: Response): Promise<void> {
   const result = await campaignService.launchCampaign(req.params.id as string);
   if (!result) {

@@ -89,6 +89,13 @@ export async function updateCampaign(id: string, data: Partial<{
   return Campaign.findByIdAndUpdate(id, data, { new: true });
 }
 
+export async function deleteCampaign(id: string) {
+  const campaign = await Campaign.findByIdAndDelete(id);
+  if (!campaign) return null;
+  await Communication.deleteMany({ campaignId: id });
+  return campaign;
+}
+
 /** Launch campaign via BullMQ worker (or inline fallback) */
 export async function launchCampaign(campaignId: string): Promise<{ campaign: ICampaign; jobId: string; mode: string } | null> {
   const campaign = await Campaign.findById(campaignId);

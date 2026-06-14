@@ -62,10 +62,10 @@ export function SegmentBuilder({ onApproved }: SegmentBuilderProps) {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Sparkles className="h-5 w-5 text-primary" />
-          NLP Segment Builder
+          Smart Segment Builder
         </CardTitle>
         <CardDescription>
-          Natural language → OpenAI intent extraction → BullMQ job → preview → approve
+          Describe the customers you want to reach in simple language, then review the generated segment and recommendations.
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
