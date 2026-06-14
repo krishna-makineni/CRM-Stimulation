@@ -1,5 +1,5 @@
-import { useEffect, useMemo, useState } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Upload, Search, Users, Filter } from 'lucide-react';
 import { Button } from '@/components/ui/button';
@@ -27,8 +27,13 @@ export function Customers() {
   const [searchTerm, setSearchTerm] = useState('');
   const [search, setSearch] = useState('');
   const [activeCategory, setActiveCategory] = useState<CustomerCategory>('All');
+  const [importing, setImporting] = useState<'customers' | 'orders' | null>(null);
+  const [importStatus, setImportStatus] = useState<string | null>(null);
+  const customerFileRef = useRef<HTMLInputElement>(null);
+  const orderFileRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
   const location = useLocation();
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     const params = new URLSearchParams(location.search);
@@ -51,15 +56,39 @@ export function Customers() {
   const handleImport = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    await customerApi.importCsv(file);
-    refetch();
+    setImporting('customers');
+    setImportStatus(null);
+    try {
+      const result = await customerApi.importCsv(file);
+      await refetch();
+      await queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      const errorSummary = result.errors.length ? ` ${result.errors.length} row(s) need attention.` : '';
+      setImportStatus(`Imported ${result.imported.toLocaleString('en-IN')} customer row(s).${errorSummary}`);
+    } catch (error) {
+      setImportStatus(error instanceof Error ? error.message : 'Customer import failed.');
+    } finally {
+      setImporting(null);
+      e.target.value = '';
+    }
   };
 
   const handleImportOrders = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
-    await orderApi.importCsv(file);
-    refetch();
+    setImporting('orders');
+    setImportStatus(null);
+    try {
+      const result = await orderApi.importCsv(file);
+      await refetch();
+      await queryClient.invalidateQueries({ queryKey: ['dashboard'] });
+      const errorSummary = result.errors.length ? ` ${result.errors.length} row(s) need attention.` : '';
+      setImportStatus(`Imported ${result.imported.toLocaleString('en-IN')} order row(s).${errorSummary}`);
+    } catch (error) {
+      setImportStatus(error instanceof Error ? error.message : 'Order import failed.');
+    } finally {
+      setImporting(null);
+      e.target.value = '';
+    }
   };
 
   const tierCounts = data?.customers?.reduce((acc: Record<string, number>, c: { loyaltyTier: string }) => {
@@ -96,24 +125,40 @@ export function Customers() {
               </CardDescription>
             </div>
             <div className="flex flex-wrap items-center gap-2">
-              <label>
-                <input type="file" accept=".csv" className="hidden" onChange={handleImport} />
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Upload className="h-4 w-4" />
-                  Import customers
-                </Button>
-              </label>
-              <label>
-                <input type="file" accept=".csv" className="hidden" onChange={handleImportOrders} />
-                <Button variant="outline" size="sm" className="gap-2">
-                  <Upload className="h-4 w-4" />
-                  Import orders
-                </Button>
-              </label>
+              <input ref={customerFileRef} type="file" accept=".csv" className="hidden" onChange={handleImport} />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                disabled={importing !== null}
+                onClick={() => customerFileRef.current?.click()}
+              >
+                <Upload className="h-4 w-4" />
+                {importing === 'customers' ? 'Importing...' : 'Import customers'}
+              </Button>
+              <input ref={orderFileRef} type="file" accept=".csv" className="hidden" onChange={handleImportOrders} />
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="gap-2"
+                disabled={importing !== null}
+                onClick={() => orderFileRef.current?.click()}
+              >
+                <Upload className="h-4 w-4" />
+                {importing === 'orders' ? 'Importing...' : 'Import orders'}
+              </Button>
             </div>
           </CardHeader>
 
           <CardContent className="space-y-5">
+            {importStatus && (
+              <div className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm text-white/70">
+                {importStatus}
+              </div>
+            )}
+
             <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
               {tierLevels.map((tier) => {
                 const cfg = tierConfig[tier];

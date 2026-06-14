@@ -2,6 +2,36 @@ import { Customer } from '../models/Customer';
 import { Order } from '../models/Order';
 import { parse } from 'csv-parse/sync';
 
+function getCsvValue(row: Record<string, string>, ...keys: string[]): string | undefined {
+  const normalized = new Map(
+    Object.entries(row).map(([key, value]) => [
+      key.replace(/^\uFEFF/, '').toLowerCase().replace(/[^a-z0-9]/g, ''),
+      value,
+    ])
+  );
+
+  for (const key of keys) {
+    const value = normalized.get(key.toLowerCase().replace(/[^a-z0-9]/g, ''))?.trim();
+    if (value) return value;
+  }
+
+  return undefined;
+}
+
+function parseNumber(value: string | undefined, fallback = 0): number {
+  if (!value) return fallback;
+  const parsed = Number(value.replace(/[^0-9.-]/g, ''));
+  return Number.isFinite(parsed) ? parsed : fallback;
+}
+
+function normalizeLoyaltyTier(value: string | undefined): 'Bronze' | 'Silver' | 'Gold' | 'Platinum' {
+  const tier = value?.trim().toLowerCase();
+  if (tier === 'platinum') return 'Platinum';
+  if (tier === 'gold') return 'Gold';
+  if (tier === 'silver') return 'Silver';
+  return 'Bronze';
+}
+
 export async function getCustomers(params: {
   search?: string;
   city?: string;
@@ -66,14 +96,30 @@ export async function importCustomersFromCsv(buffer: Buffer) {
 
   for (const [index, row] of records.entries()) {
     try {
-      const customer = await Customer.create({
-        name: row.name || row.Name,
-        email: row.email || row.Email,
-        phone: row.phone || row.Phone,
-        city: row.city || row.City,
-        totalSpend: parseFloat(row.totalSpend || row.TotalSpend || '0'),
-        loyaltyTier: row.loyaltyTier || row.LoyaltyTier || 'Bronze',
-      });
+      const name = getCsvValue(row, 'name', 'customerName', 'customer');
+      const email = getCsvValue(row, 'email', 'customerEmail', 'emailAddress')?.toLowerCase();
+      const phone = getCsvValue(row, 'phone', 'mobile', 'mobileNumber', 'phoneNumber') ?? '';
+      const city = getCsvValue(row, 'city', 'location') ?? '';
+
+      if (!name) throw new Error('Missing customer name');
+      if (!email) throw new Error('Missing customer email');
+      if (!city) throw new Error('Missing customer city');
+
+      const totalSpend = getCsvValue(row, 'totalSpend', 'totalSpent', 'spend', 'lifetimeValue');
+      const customer = await Customer.findOneAndUpdate(
+        { email },
+        {
+          $set: {
+            name,
+            email,
+            phone,
+            city,
+            loyaltyTier: normalizeLoyaltyTier(getCsvValue(row, 'loyaltyTier', 'tier')),
+            ...(totalSpend ? { totalSpend: parseNumber(totalSpend) } : {}),
+          },
+        },
+        { new: true, upsert: true, setDefaultsOnInsert: true }
+      );
       imported.push(customer);
     } catch (error) {
       errors.push({ row: index + 1, error: error instanceof Error ? error.message : 'Unknown error' });

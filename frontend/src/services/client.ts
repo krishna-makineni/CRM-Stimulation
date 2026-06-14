@@ -24,6 +24,9 @@ export async function uploadFile<T>(endpoint: string, file: File): Promise<T> {
     method: 'POST',
     body: formData,
   });
-  if (!response.ok) throw new Error('Upload failed');
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({ error: 'Upload failed' }));
+    throw new Error(error.error || `Upload failed with HTTP ${response.status}`);
+  }
   return response.json();
 }
