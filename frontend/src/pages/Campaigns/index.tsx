@@ -477,7 +477,7 @@ export function Campaigns() {
                             }
                           }}
                           className="inline-flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition hover:bg-red-500 hover:text-white"
-                          disabled={deleteMutation.isLoading}
+                          disabled={deleteMutation.isPending}
                         >
                           <Trash2 className="h-4 w-4" />
                         </button>
