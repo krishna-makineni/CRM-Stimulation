@@ -278,13 +278,3 @@ Human-in-the-loop: campaigns are **never** launched without explicit marketer ap
 ### Why Direct HTTP for Now
 For an MVP with simulated channels and moderate traffic, direct HTTP with retry logic is sufficient. The architecture is designed with clear service boundaries so migrating to message queues requires minimal code changes — only the `channelClient.ts` and `callbackService.ts` transport layers need updating.
 
-## Video Walkthrough
-
-_Record a 5–6 minute walkthrough covering:_
-1. Product overview and AI Copilot demo
-2. Live campaign creation and launch
-3. Analytics dashboard
-4. Technical architecture walkthrough
-5. AI-native development workflow
-
-_Add video link here_
