@@ -9,7 +9,7 @@ An AI-powered marketing CRM that helps brands intelligently reach shoppers throu
 | Frontend (Vercel) |https://crm-stimulation.vercel.app/ |
 | CRM Backend (Render) |https://crm-stimulation.vercel.app/ |
 | Channel Service (Render) | https://crm-stimulation.vercel.app/ |
-| GitHub Repository | _Add repository URL here_ |
+| GitHub Repository | https://github.com/krishna-makineni/CRM-Stimulation/tree/master |
 
 ## Architecture
 
